@@ -566,42 +566,376 @@
                 grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             }
         }
+
+        /* Tab navigation styles */
+        .tab-navigation {
+            background-color: white;
+            padding: 0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 16px 24px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .tab-button.active {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+            background-color: #f9fff9;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Calculator styles */
+        .calculator-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calculator-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: clamp(20px, 4vw, 24px);
+        }
+
+        .calc-input-group {
+            margin-bottom: 20px;
+        }
+
+        .calc-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .calc-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .calc-input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .calc-input-row input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .calc-input-row span {
+            color: #666;
+            font-weight: 500;
+            min-width: 60px;
+        }
+
+        .calc-results {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .calc-results h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .calc-result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .calc-result-item:last-child {
+            border-bottom: none;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid #4CAF50;
+            font-weight: bold;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+
+        .calc-result-label {
+            color: #666;
+        }
+
+        .calc-result-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .calc-extra-inputs {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .calc-extra-inputs h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .calc-extra-inputs input[type="text"],
+        .calc-extra-inputs input[type="date"] {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .calc-extra-inputs input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .generate-summary-btn {
+            width: 100%;
+            margin-top: 20px;
+            background-color: #2196F3;
+            color: white;
+            padding: 14px;
+        }
+
+        .generate-summary-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .summary-output {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+            display: none;
+        }
+
+        .summary-output.show {
+            display: block;
+        }
+
+        .summary-output h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .summary-text {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #ddd;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .copy-summary-btn {
+            width: 100%;
+            margin-top: 15px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .copy-summary-btn:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 767px) {
+            .tab-button {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+
+            .calculator-section {
+                padding: 20px;
+            }
+
+            .calc-input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .calc-input-row span {
+                text-align: left;
+            }
+
+            .summary-text {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>🏸 BadminQ Manager</h1>
 
-    <!-- Settings section -->
-    <div class="settings-section">
-        <div class="settings-left">
-            <div class="settings-group">
-                <label for="courtsInput">Number of Courts:</label>
-                <input type="number" id="courtsInput" min="1" max="10" value="2" onchange="updateCourts()" />
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-button active" onclick="switchTab('queue')">Queue Manager</button>
+        <button class="tab-button" onclick="switchTab('calculator')">Cost Calculator</button>
+    </div>
+
+    <!-- Queue Manager Tab -->
+    <div id="queueTab" class="tab-content active">
+        <!-- Settings section -->
+        <div class="settings-section">
+            <div class="settings-left">
+                <div class="settings-group">
+                    <label for="courtsInput">Number of Courts:</label>
+                    <input type="number" id="courtsInput" min="1" max="10" value="1" onchange="updateCourts()" />
+                </div>
+            </div>
+            <div class="settings-right">
+                <span class="last-saved" id="lastSaved">Never saved</span>
+                <button class="btn-warning btn-small" onclick="showResetModal()">Reset All Data</button>
             </div>
         </div>
-        <div class="settings-right">
-            <span class="last-saved" id="lastSaved">Never saved</span>
-            <button class="btn-warning btn-small" onclick="showResetModal()">Reset All Data</button>
+
+        <!-- Section to add new players -->
+        <div class="add-player-section">
+            <input type="text" id="playerNameInput" placeholder="Enter player name" />
+            <button class="btn-primary" onclick="addPlayer()">Add Player</button>
+        </div>
+
+        <!-- Main container -->
+        <div class="main-container">
+            <!-- Waiting queue on the left -->
+            <div class="waiting-section" id="waitingSection">
+                <h2>Waiting Queue (<span id="waitingCount">0</span>)</h2>
+                <div id="waitingQueue" class="drop-zone"></div>
+            </div>
+
+            <!-- Courts on the right -->
+            <div class="courts-container" id="courtsContainer">
+                <!-- Courts will be dynamically generated here -->
+            </div>
         </div>
     </div>
 
-    <!-- Section to add new players -->
-    <div class="add-player-section">
-        <input type="text" id="playerNameInput" placeholder="Enter player name" />
-        <button class="btn-primary" onclick="addPlayer()">Add Player</button>
-    </div>
+    <!-- Calculator Tab -->
+    <div id="calculatorTab" class="tab-content">
+        <div class="calculator-section">
+            <h2>💰 Cost Calculator</h2>
+            
+            <div class="calc-input-group">
+                <label for="courtFeePerHour">Court Fee per Hour</label>
+                <div class="calc-input-row">
+                    <input type="number" id="courtFeePerHour" min="0" step="0.01" value="0" oninput="calculateTotal()" placeholder="0.00">
+                    <span>PHP</span>
+                </div>
+            </div>
 
-    <!-- Main container -->
-    <div class="main-container">
-        <!-- Waiting queue on the left -->
-        <div class="waiting-section" id="waitingSection">
-            <h2>Waiting Queue (<span id="waitingCount">0</span>)</h2>
-            <div id="waitingQueue" class="drop-zone"></div>
-        </div>
+            <div class="calc-input-group">
+                <label for="numberOfHours">Number of Hours</label>
+                <div class="calc-input-row">
+                    <input type="number" id="numberOfHours" min="0" step="0.5" value="0" oninput="calculateTotal()" placeholder="0">
+                    <span>hours</span>
+                </div>
+            </div>
 
-        <!-- Courts on the right -->
-        <div class="courts-container" id="courtsContainer">
-            <!-- Courts will be dynamically generated here -->
+            <div class="calc-input-group">
+                <label for="ballFeePerBall">Ball Fee per Ball</label>
+                <div class="calc-input-row">
+                    <input type="number" id="ballFeePerBall" min="0" step="0.01" value="0" oninput="calculateTotal()" placeholder="0.00">
+                    <span>PHP</span>
+                </div>
+            </div>
+
+            <div class="calc-input-group">
+                <label for="numberOfBalls">Number of Balls</label>
+                <div class="calc-input-row">
+                    <input type="number" id="numberOfBalls" min="0" step="1" value="0" oninput="calculateTotal()" placeholder="0">
+                    <span>balls</span>
+                </div>
+            </div>
+
+            <div class="calc-input-group">
+                <label for="numberOfPlayers">Number of Players</label>
+                <div class="calc-input-row">
+                    <input type="number" id="numberOfPlayers" min="1" step="1" value="1" oninput="calculateTotal()" placeholder="1">
+                    <span>players</span>
+                </div>
+            </div>
+
+            <div class="calc-results">
+                <h3>Results</h3>
+                <div class="calc-result-item">
+                    <span class="calc-result-label">Total Court Fee:</span>
+                    <span class="calc-result-value" id="totalCourtFee">₱0.00</span>
+                </div>
+                <div class="calc-result-item">
+                    <span class="calc-result-label">Total Ball Fee:</span>
+                    <span class="calc-result-value" id="totalBallFee">₱0.00</span>
+                </div>
+                <div class="calc-result-item">
+                    <span class="calc-result-label">Total Cost Per Person:</span>
+                    <span class="calc-result-value" id="totalPerPerson">₱0.00</span>
+                </div>
+            </div>
+
+            <div class="calc-extra-inputs">
+                <h3>Generate Summary (Optional)</h3>
+                <label for="sessionDate">Date</label>
+                <input type="date" id="sessionDate" />
+                
+                <label for="venueName">Venue Name</label>
+                <input type="text" id="venueName" placeholder="e.g., Patt's Badminton Court" />
+                
+                <button class="generate-summary-btn" onclick="generateSummary()">📋 Generate Summary</button>
+            </div>
+
+            <div class="summary-output" id="summaryOutput">
+                <h3>Summary</h3>
+                <div class="summary-text" id="summaryText"></div>
+                <button class="copy-summary-btn" onclick="copySummary()">📋 Copy to Clipboard</button>
+            </div>
         </div>
     </div>
 
@@ -618,6 +952,12 @@
         </div>
     </div>
 
+    <!-- Footer with version and copyright -->
+    <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 14px;">
+        <p style="margin-bottom: 5px;">BadminQ Manager v1.2.0</p>
+        <p style="margin: 0;">© 2026 BadminQ Manager. All rights reserved.</p>
+    </footer>
+
     <script>
         // ============================================
         // DATA MODEL
@@ -627,7 +967,7 @@
         let players = [];
         
         // Number of courts
-        let numberOfCourts = 2;
+        let numberOfCourts = 1;
         
         // Array to store courts, each court has an array of players (max 4)
         let courts = [];
@@ -693,7 +1033,7 @@
                 players = state.players || [];
                 
                 // Restore number of courts
-                numberOfCourts = state.numberOfCourts || 2;
+                numberOfCourts = state.numberOfCourts || 1;
                 document.getElementById('courtsInput').value = numberOfCourts;
                 
                 // Initialize courts array
@@ -777,8 +1117,8 @@
             
             // Reset all data
             players = [];
-            numberOfCourts = 2;
-            document.getElementById('courtsInput').value = 2;
+            numberOfCourts = 1;
+            document.getElementById('courtsInput').value = 1;
             initializeCourts();
             
             // Hide modal
@@ -1365,6 +1705,167 @@
             });
             
             return playerCard;
+        }
+
+        // ============================================
+        // CALCULATOR FUNCTIONS
+        // ============================================
+
+        /**
+         * Calculate total costs
+         */
+        function calculateTotal() {
+            // Get input values
+            const courtFeePerHour = parseFloat(document.getElementById('courtFeePerHour').value) || 0;
+            const numberOfHours = parseFloat(document.getElementById('numberOfHours').value) || 0;
+            const ballFeePerBall = parseFloat(document.getElementById('ballFeePerBall').value) || 0;
+            const numberOfBalls = parseFloat(document.getElementById('numberOfBalls').value) || 0;
+            const numberOfPlayers = parseFloat(document.getElementById('numberOfPlayers').value) || 1;
+            
+            // Calculate totals
+            const totalCourtFee = courtFeePerHour * numberOfHours;
+            const totalBallFee = ballFeePerBall * numberOfBalls;
+            const totalPerPerson = (totalCourtFee + totalBallFee) / numberOfPlayers;
+            
+            // Update display
+            document.getElementById('totalCourtFee').textContent = '₱' + totalCourtFee.toFixed(2);
+            document.getElementById('totalBallFee').textContent = '₱' + totalBallFee.toFixed(2);
+            document.getElementById('totalPerPerson').textContent = '₱' + totalPerPerson.toFixed(2);
+        }
+
+        /**
+         * Generate summary text
+         */
+        function generateSummary() {
+            // Get calculator values
+            const courtFeePerHour = parseFloat(document.getElementById('courtFeePerHour').value) || 0;
+            const numberOfHours = parseFloat(document.getElementById('numberOfHours').value) || 0;
+            const ballFeePerBall = parseFloat(document.getElementById('ballFeePerBall').value) || 0;
+            const numberOfBalls = parseFloat(document.getElementById('numberOfBalls').value) || 0;
+            const numberOfPlayersCalc = parseFloat(document.getElementById('numberOfPlayers').value) || 1;
+            
+            // Calculate totals
+            const totalCourtFee = courtFeePerHour * numberOfHours;
+            const totalBallFee = ballFeePerBall * numberOfBalls;
+            const grandTotal = totalCourtFee + totalBallFee;
+            const totalPerPerson = grandTotal / numberOfPlayersCalc;
+            
+            // Get date and venue
+            const dateInput = document.getElementById('sessionDate').value;
+            const venueName = document.getElementById('venueName').value.trim() || 'Badminton Court';
+            
+            // Format date
+            let formattedDate = '';
+            if (dateInput) {
+                const date = new Date(dateInput + 'T00:00:00');
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                formattedDate = `${months[date.getMonth()]} ${date.getDate()}`;
+            } else {
+                const today = new Date();
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                formattedDate = `${months[today.getMonth()]} ${today.getDate()}`;
+            }
+            
+            // Get players who have played (gamesPlayed > 0)
+            const playedPlayers = players.filter(p => p.gamesPlayed > 0);
+            
+            // Build player list
+            let playerList = '';
+            if (playedPlayers.length > 0) {
+                playerList = playedPlayers.map((p, idx) => `${idx + 1}. ${p.name}`).join('\n');
+            } else {
+                // Use number of players from calculator
+                playerList = Array.from({length: numberOfPlayersCalc}, (_, i) => `${i + 1}. Player ${i + 1}`).join('\n');
+            }
+            
+            // Format numbers with commas
+            const formatNumber = (num) => {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            
+            // Build summary text
+            const summary = `${formattedDate} - ${venueName}
+
+${formatNumber(Math.round(totalCourtFee))}(${Math.round(courtFeePerHour)} x ${numberOfHours}hrs) + ${formatNumber(Math.round(totalBallFee))}(${Math.round(ballFeePerBall)} x ${numberOfBalls}balls) = ${formatNumber(Math.round(grandTotal))}
+
+${formatNumber(Math.round(grandTotal))}/${playedPlayers.length > 0 ? playedPlayers.length : numberOfPlayersCalc} = ${Math.round(totalPerPerson)}
+
+${playerList}`;
+            
+            // Display summary
+            document.getElementById('summaryText').textContent = summary;
+            document.getElementById('summaryOutput').classList.add('show');
+        }
+
+        /**
+         * Copy summary to clipboard
+         */
+        function copySummary() {
+            const summaryText = document.getElementById('summaryText').textContent;
+            
+            // Use the Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(summaryText).then(() => {
+                    alert('Summary copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    fallbackCopy(summaryText);
+                });
+            } else {
+                fallbackCopy(summaryText);
+            }
+        }
+
+        /**
+         * Fallback copy method for older browsers
+         */
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('Summary copied to clipboard!');
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+                alert('Failed to copy. Please copy manually.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // ============================================
+        // TAB SWITCHING
+        // ============================================
+
+        /**
+         * Switch between tabs
+         */
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            if (tabName === 'queue') {
+                document.getElementById('queueTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else if (tabName === 'calculator') {
+                document.getElementById('calculatorTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+            }
         }
 
         // ============================================
