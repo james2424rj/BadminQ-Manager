@@ -258,20 +258,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: move;
             transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: none;
         }
 
         .player-card:hover {
-            transform: translateX(5px);
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .player-card:active {
-            cursor: grabbing;
         }
 
         .player-card.dragging {
@@ -287,6 +280,7 @@
         .player-info {
             flex-grow: 1;
             min-width: 0;
+            pointer-events: none;
         }
 
         .player-name {
@@ -311,10 +305,21 @@
             margin-right: 12px;
             flex-shrink: 0;
             cursor: grab;
+            padding: 8px;
+            margin-left: -8px;
+            touch-action: none;
+            transition: color 0.2s, background-color 0.2s;
+            border-radius: 4px;
+        }
+
+        .drag-handle:hover {
+            color: #666;
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
         .drag-handle:active {
             cursor: grabbing;
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         .empty-message {
@@ -503,18 +508,10 @@
                 min-height: 60px;
             }
 
-            .player-card:hover {
-                transform: none;
-            }
-
-            .player-card:active {
-                transform: scale(0.98);
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            }
-
             .drag-handle {
                 font-size: 28px;
                 margin-right: 10px;
+                padding: 10px;
             }
 
             .modal-content {
@@ -643,6 +640,7 @@
         let touchStartX = 0;
         let touchStartY = 0;
         let isDraggingTouch = false;
+        let dragStartedFromHandle = false;
 
         // LocalStorage key
         const STORAGE_KEY = 'badminq_data';
@@ -963,6 +961,12 @@
         // ============================================
 
         function handleDragStart(event, player, courtIndex = null) {
+            // Only allow drag if it started from the handle
+            if (!dragStartedFromHandle) {
+                event.preventDefault();
+                return false;
+            }
+            
             draggedPlayer = player;
             sourceCourt = courtIndex;
             event.currentTarget.classList.add('dragging');
@@ -973,6 +977,7 @@
 
         function handleDragEnd(event) {
             event.currentTarget.classList.remove('dragging');
+            dragStartedFromHandle = false;
             
             document.getElementById('waitingSection').classList.remove('drag-over');
             document.querySelectorAll('.court-players').forEach(court => {
@@ -1054,7 +1059,16 @@
         // ============================================
 
         function handleTouchStart(event, player, courtIndex = null) {
+            // Check if touch started on the drag handle
+            const dragHandle = event.currentTarget.querySelector('.drag-handle');
             const touch = event.touches[0];
+            const touchedElement = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if (!dragHandle.contains(touchedElement)) {
+                // Touch did not start on handle, don't initiate drag
+                return;
+            }
+            
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
             draggedPlayer = player;
@@ -1272,6 +1286,17 @@
                     </div>
                 </div>
             `;
+            
+            // Add event listener to drag handle for desktop drag
+            const dragHandle = playerCard.querySelector('.drag-handle');
+            dragHandle.addEventListener('mousedown', (e) => {
+                dragStartedFromHandle = true;
+            });
+            
+            // Reset flag when mouse leaves the card
+            playerCard.addEventListener('mouseleave', () => {
+                dragStartedFromHandle = false;
+            });
             
             return playerCard;
         }
