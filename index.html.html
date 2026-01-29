@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BadminQ Manager</title>
+    <style>
+        /* Basic reset and body styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: clamp(24px, 5vw, 32px);
+        }
+
+        /* Container for settings section */
+        .settings-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .settings-right {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .settings-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-group label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .settings-group input[type="number"] {
+            width: 80px;
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .last-saved {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .btn-warning {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-warning:hover {
+            background-color: #f57c00;
+        }
+
+        /* Container for add player section */
+        .add-player-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .add-player-section input {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            flex: 1 1 200px;
+            min-width: 0;
+        }
+
+        /* Button styling */
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            font-weight: 500;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            flex: 0 1 auto;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #da190b;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Main container layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Waiting queue section */
+        .waiting-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 400px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .waiting-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            font-size: clamp(18px, 4vw, 24px);
+        }
+
+        /* Courts container */
+        .courts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .court-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-top: 4px solid #2196F3;
+        }
+
+        .court-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2196F3;
+        }
+
+        .court-header h3 {
+            color: #333;
+            font-size: clamp(16px, 3.5vw, 20px);
+            margin: 0;
+        }
+
+        .court-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .court-controls button {
+            flex: 1;
+        }
+
+        /* Drag and drop visual feedback */
+        .waiting-section.drag-over,
+        .court-players.drag-over {
+            background-color: #e8f5e9;
+            border: 2px dashed #4CAF50;
+        }
+
+        .court-players.drag-over {
+            background-color: #e3f2fd;
+            border: 2px dashed #2196F3;
+        }
+
+        /* Player card styling */
+        .player-card {
+            background-color: #f9f9f9;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .player-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .player-card:active {
+            cursor: grabbing;
+        }
+
+        .player-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .player-card.playing {
+            border-left-color: #2196F3;
+            background-color: #e3f2fd;
+        }
+
+        .player-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .player-stats {
+            font-size: clamp(12px, 3vw, 14px);
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .drag-handle {
+            color: #999;
+            font-size: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            cursor: grab;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 30px 20px;
+            font-size: clamp(14px, 3vw, 16px);
+        }
+
+        .court-players {
+            min-height: 100px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-empty {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .status-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Tablet styles (768px - 1199px) */
+        @media (max-width: 1199px) and (min-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            h1 {
+                margin-bottom: 24px;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .waiting-section {
+                position: static;
+            }
+
+            .courts-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        /* Mobile phone styles (< 768px) */
+        @media (max-width: 767px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                margin-bottom: 20px;
+            }
+
+            .settings-section {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+            }
+
+            .settings-left,
+            .settings-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .settings-group {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .add-player-section {
+                flex-direction: column;
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .add-player-section input {
+                width: 100%;
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            .add-player-section button {
+                width: 100%;
+                padding: 14px;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .waiting-section {
+                position: static;
+                padding: 16px;
+            }
+
+            .courts-container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .court-section {
+                padding: 16px;
+            }
+
+            .court-controls {
+                flex-direction: column;
+            }
+
+            .player-card {
+                padding: 14px;
+                margin-bottom: 10px;
+                min-height: 60px;
+            }
+
+            .player-card:hover {
+                transform: none;
+            }
+
+            .player-card:active {
+                transform: scale(0.98);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            }
+
+            .drag-handle {
+                font-size: 28px;
+                margin-right: 10px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-buttons button {
+                width: 100%;
+            }
+        }
+
+        /* Very small phones (< 375px) */
+        @media (max-width: 374px) {
+            body {
+                padding: 8px;
+            }
+
+            h1 {
+                margin-bottom: 16px;
+            }
+
+            .settings-section,
+            .add-player-section,
+            .waiting-section,
+            .court-section {
+                padding: 12px;
+            }
+
+            .player-card {
+                padding: 12px;
+            }
+
+            .player-stats {
+                font-size: 11px;
+            }
+        }
+
+        /* Landscape orientation on phones */
+        @media (max-width: 767px) and (orientation: landscape) {
+            .courts-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Large desktop screens */
+        @media (min-width: 1400px) {
+            .courts-container {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🏸 BadminQ Manager</h1>
+
+    <!-- Settings section -->
+    <div class="settings-section">
+        <div class="settings-left">
+            <div class="settings-group">
+                <label for="courtsInput">Number of Courts:</label>
+                <input type="number" id="courtsInput" min="1" max="10" value="2" onchange="updateCourts()" />
+            </div>
+        </div>
+        <div class="settings-right">
+            <span class="last-saved" id="lastSaved">Never saved</span>
+            <button class="btn-warning btn-small" onclick="showResetModal()">Reset All Data</button>
+        </div>
+    </div>
+
+    <!-- Section to add new players -->
+    <div class="add-player-section">
+        <input type="text" id="playerNameInput" placeholder="Enter player name" />
+        <button class="btn-primary" onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <!-- Main container -->
+    <div class="main-container">
+        <!-- Waiting queue on the left -->
+        <div class="waiting-section" id="waitingSection">
+            <h2>Waiting Queue (<span id="waitingCount">0</span>)</h2>
+            <div id="waitingQueue" class="drop-zone"></div>
+        </div>
+
+        <!-- Courts on the right -->
+        <div class="courts-container" id="courtsContainer">
+            <!-- Courts will be dynamically generated here -->
+        </div>
+    </div>
+
+    <!-- Reset confirmation modal -->
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <h2>⚠️ Reset All Data?</h2>
+            <p>This will permanently delete all players, game history, and settings. This action cannot be undone.</p>
+            <p>Are you sure you want to continue?</p>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="hideResetModal()">Cancel</button>
+                <button class="btn-danger" onclick="confirmReset()">Yes, Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATA MODEL
+        // ============================================
+        
+        // Array to store all players
+        let players = [];
+        
+        // Number of courts
+        let numberOfCourts = 2;
+        
+        // Array to store courts, each court has an array of players (max 4)
+        let courts = [];
+
+        // Variable to track what player is being dragged
+        let draggedPlayer = null;
+        let sourceCourt = null;
+
+        // Touch support variables
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let isDraggingTouch = false;
+
+        // LocalStorage key
+        const STORAGE_KEY = 'badminq_data';
+
+        // ============================================
+        // PERSISTENCE FUNCTIONS
+        // ============================================
+
+        /**
+         * Save current state to localStorage
+         */
+        function saveState() {
+            const state = {
+                players: players,
+                numberOfCourts: numberOfCourts,
+                courts: courts.map(court => court.map(player => player.name)), // Save player names on courts
+                lastSaved: Date.now()
+            };
+            
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                updateLastSavedTime(state.lastSaved);
+            } catch (error) {
+                console.error('Failed to save state:', error);
+                alert('Warning: Unable to save data. Your changes may be lost on page refresh.');
+            }
+        }
+
+        /**
+         * Load state from localStorage
+         */
+        function loadState() {
+            try {
+                const savedState = localStorage.getItem(STORAGE_KEY);
+                
+                if (!savedState) {
+                    // No saved state - first time user
+                    return false;
+                }
+                
+                const state = JSON.parse(savedState);
+                
+                // Restore players
+                players = state.players || [];
+                
+                // Restore number of courts
+                numberOfCourts = state.numberOfCourts || 2;
+                document.getElementById('courtsInput').value = numberOfCourts;
+                
+                // Initialize courts array
+                initializeCourts();
+                
+                // Restore players on courts
+                if (state.courts) {
+                    state.courts.forEach((courtPlayerNames, courtIndex) => {
+                        if (courtIndex < courts.length) {
+                            courts[courtIndex] = courtPlayerNames
+                                .map(name => players.find(p => p.name === name))
+                                .filter(p => p !== undefined);
+                        }
+                    });
+                }
+                
+                // Update last saved time
+                if (state.lastSaved) {
+                    updateLastSavedTime(state.lastSaved);
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Failed to load state:', error);
+                return false;
+            }
+        }
+
+        /**
+         * Clear all saved data
+         */
+        function clearState() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (error) {
+                console.error('Failed to clear state:', error);
+            }
+        }
+
+        /**
+         * Update the "last saved" display
+         */
+        function updateLastSavedTime(timestamp) {
+            const lastSavedElement = document.getElementById('lastSaved');
+            const now = Date.now();
+            const diffInSeconds = Math.floor((now - timestamp) / 1000);
+            
+            if (diffInSeconds < 5) {
+                lastSavedElement.textContent = 'Just saved';
+            } else if (diffInSeconds < 60) {
+                lastSavedElement.textContent = `Saved ${diffInSeconds}s ago`;
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                lastSavedElement.textContent = `Saved ${minutes}m ago`;
+            } else {
+                const date = new Date(timestamp);
+                lastSavedElement.textContent = `Saved ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            }
+        }
+
+        /**
+         * Show reset confirmation modal
+         */
+        function showResetModal() {
+            document.getElementById('resetModal').classList.add('show');
+        }
+
+        /**
+         * Hide reset confirmation modal
+         */
+        function hideResetModal() {
+            document.getElementById('resetModal').classList.remove('show');
+        }
+
+        /**
+         * Confirm and execute reset
+         */
+        function confirmReset() {
+            // Clear localStorage
+            clearState();
+            
+            // Reset all data
+            players = [];
+            numberOfCourts = 2;
+            document.getElementById('courtsInput').value = 2;
+            initializeCourts();
+            
+            // Hide modal
+            hideResetModal();
+            
+            // Re-render
+            render();
+            
+            // Update last saved display
+            document.getElementById('lastSaved').textContent = 'Never saved';
+        }
+
+        // ============================================
+        // CORE FUNCTIONS
+        // ============================================
+
+        /**
+         * Initialize courts based on number of courts
+         */
+        function initializeCourts() {
+            // Preserve existing court data if expanding
+            const oldCourts = courts.slice();
+            courts = [];
+            
+            for (let i = 0; i < numberOfCourts; i++) {
+                if (i < oldCourts.length) {
+                    courts.push(oldCourts[i]);
+                } else {
+                    courts.push([]);
+                }
+            }
+        }
+
+        /**
+         * Update number of courts
+         */
+        function updateCourts() {
+            const input = document.getElementById('courtsInput');
+            const newCount = parseInt(input.value);
+            
+            if (newCount < 1 || newCount > 10) {
+                alert('Please enter a number between 1 and 10');
+                input.value = numberOfCourts;
+                return;
+            }
+            
+            // If reducing courts, move players back to waiting
+            if (newCount < numberOfCourts) {
+                for (let i = newCount; i < numberOfCourts; i++) {
+                    courts[i] = [];
+                }
+            }
+            
+            // If adding courts, initialize empty arrays
+            if (newCount > numberOfCourts) {
+                for (let i = numberOfCourts; i < newCount; i++) {
+                    courts.push([]);
+                }
+            }
+            
+            numberOfCourts = newCount;
+            saveState();
+            render();
+        }
+
+        /**
+         * Adds a new player to the waiting queue
+         */
+        function addPlayer() {
+            const input = document.getElementById('playerNameInput');
+            const name = input.value.trim();
+            
+            if (name === '') {
+                alert('Please enter a player name');
+                return;
+            }
+            
+            if (players.some(player => player.name.toLowerCase() === name.toLowerCase())) {
+                alert('Player already exists');
+                return;
+            }
+            
+            const newPlayer = {
+                name: name,
+                gamesPlayed: 0,
+                lastPlayedTimestamp: 0
+            };
+            
+            players.push(newPlayer);
+            input.value = '';
+            
+            saveState();
+            render();
+        }
+
+        /**
+         * Check if a player is currently playing on any court
+         */
+        function isPlayerPlaying(player) {
+            return courts.some(court => court.includes(player));
+        }
+
+        /**
+         * Get which court a player is on (returns -1 if not playing)
+         */
+        function getPlayerCourt(player) {
+            for (let i = 0; i < courts.length; i++) {
+                if (courts[i].includes(player)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Starts a game on a specific court
+         */
+        function startGame(courtIndex) {
+            const waitingPlayers = players.filter(player => !isPlayerPlaying(player));
+            
+            if (waitingPlayers.length < 4) {
+                alert('Need at least 4 players in the waiting queue to start a game');
+                return;
+            }
+            
+            const sortedPlayers = waitingPlayers.sort((a, b) => {
+                if (a.gamesPlayed !== b.gamesPlayed) {
+                    return a.gamesPlayed - b.gamesPlayed;
+                }
+                return a.lastPlayedTimestamp - b.lastPlayedTimestamp;
+            });
+            
+            courts[courtIndex] = sortedPlayers.slice(0, 4);
+            
+            saveState();
+            render();
+        }
+
+        /**
+         * Ends the game on a specific court
+         */
+        function endGame(courtIndex) {
+            const courtPlayers = courts[courtIndex];
+            
+            if (courtPlayers.length === 0) {
+                return;
+            }
+
+            const currentTime = Date.now();
+            
+            courtPlayers.forEach(player => {
+                player.gamesPlayed += 1;
+                player.lastPlayedTimestamp = currentTime;
+            });
+            
+            courts[courtIndex] = [];
+            
+            saveState();
+            render();
+        }
+
+        /**
+         * Formats a timestamp into a readable time
+         */
+        function formatLastPlayed(timestamp) {
+            if (timestamp === 0) {
+                return 'Never';
+            }
+            
+            const now = Date.now();
+            const diffInSeconds = Math.floor((now - timestamp) / 1000);
+            
+            if (diffInSeconds < 60) {
+                return 'Just now';
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `${minutes}m ago`;
+            } else {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `${hours}h ago`;
+            }
+        }
+
+        // ============================================
+        // DRAG AND DROP FUNCTIONS
+        // ============================================
+
+        function handleDragStart(event, player, courtIndex = null) {
+            draggedPlayer = player;
+            sourceCourt = courtIndex;
+            event.currentTarget.classList.add('dragging');
+            
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', event.currentTarget.innerHTML);
+        }
+
+        function handleDragEnd(event) {
+            event.currentTarget.classList.remove('dragging');
+            
+            document.getElementById('waitingSection').classList.remove('drag-over');
+            document.querySelectorAll('.court-players').forEach(court => {
+                court.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
+            
+            event.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(event, zone, courtIndex = null) {
+            if (zone === 'waiting') {
+                document.getElementById('waitingSection').classList.add('drag-over');
+            } else {
+                const courtPlayers = document.getElementById(`court-${courtIndex}-players`);
+                if (courtPlayers) {
+                    courtPlayers.classList.add('drag-over');
+                }
+            }
+        }
+
+        function handleDragLeave(event, zone, courtIndex = null) {
+            if (zone === 'waiting') {
+                document.getElementById('waitingSection').classList.remove('drag-over');
+            } else {
+                const courtPlayers = document.getElementById(`court-${courtIndex}-players`);
+                if (courtPlayers) {
+                    courtPlayers.classList.remove('drag-over');
+                }
+            }
+        }
+
+        function handleDrop(event, targetZone, targetCourtIndex = null) {
+            if (event.stopPropagation) {
+                event.stopPropagation();
+            }
+
+            if (!draggedPlayer) {
+                return false;
+            }
+
+            if (sourceCourt !== null) {
+                courts[sourceCourt] = courts[sourceCourt].filter(p => p !== draggedPlayer);
+            }
+
+            if (targetZone === 'court') {
+                if (courts[targetCourtIndex].length >= 4) {
+                    alert('Maximum 4 players can play on a court at once');
+                    if (sourceCourt !== null) {
+                        courts[sourceCourt].push(draggedPlayer);
+                    }
+                } else {
+                    courts[targetCourtIndex].push(draggedPlayer);
+                }
+            }
+
+            draggedPlayer = null;
+            sourceCourt = null;
+            
+            document.getElementById('waitingSection').classList.remove('drag-over');
+            document.querySelectorAll('.court-players').forEach(court => {
+                court.classList.remove('drag-over');
+            });
+
+            saveState();
+            render();
+            
+            return false;
+        }
+
+        // ============================================
+        // TOUCH SUPPORT
+        // ============================================
+
+        function handleTouchStart(event, player, courtIndex = null) {
+            const touch = event.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            draggedPlayer = player;
+            sourceCourt = courtIndex;
+            isDraggingTouch = false;
+            
+            event.currentTarget.classList.add('dragging');
+        }
+
+        function handleTouchMove(event) {
+            if (!draggedPlayer) return;
+            
+            event.preventDefault();
+            
+            const touch = event.touches[0];
+            const deltaX = Math.abs(touch.clientX - touchStartX);
+            const deltaY = Math.abs(touch.clientY - touchStartY);
+            
+            if (deltaX > 10 || deltaY > 10) {
+                isDraggingTouch = true;
+            }
+            
+            const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            document.getElementById('waitingSection').classList.remove('drag-over');
+            document.querySelectorAll('.court-players').forEach(court => {
+                court.classList.remove('drag-over');
+            });
+            
+            if (elementUnderTouch) {
+                const waitingSection = document.getElementById('waitingSection');
+                
+                if (waitingSection.contains(elementUnderTouch)) {
+                    waitingSection.classList.add('drag-over');
+                } else {
+                    for (let i = 0; i < numberOfCourts; i++) {
+                        const courtPlayers = document.getElementById(`court-${i}-players`);
+                        if (courtPlayers && courtPlayers.contains(elementUnderTouch)) {
+                            courtPlayers.classList.add('drag-over');
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function handleTouchEnd(event) {
+            if (!draggedPlayer || !isDraggingTouch) {
+                if (event.currentTarget) {
+                    event.currentTarget.classList.remove('dragging');
+                }
+                draggedPlayer = null;
+                sourceCourt = null;
+                isDraggingTouch = false;
+                return;
+            }
+            
+            event.preventDefault();
+            
+            const touch = event.changedTouches[0];
+            const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+            
+            if (elementUnderTouch) {
+                const waitingSection = document.getElementById('waitingSection');
+                
+                let dropped = false;
+                
+                if (waitingSection.contains(elementUnderTouch)) {
+                    if (sourceCourt !== null) {
+                        courts[sourceCourt] = courts[sourceCourt].filter(p => p !== draggedPlayer);
+                    }
+                    dropped = true;
+                } else {
+                    for (let i = 0; i < numberOfCourts; i++) {
+                        const courtPlayers = document.getElementById(`court-${i}-players`);
+                        if (courtPlayers && courtPlayers.contains(elementUnderTouch)) {
+                            if (sourceCourt !== null) {
+                                courts[sourceCourt] = courts[sourceCourt].filter(p => p !== draggedPlayer);
+                            }
+                            
+                            if (courts[i].length >= 4) {
+                                alert('Maximum 4 players can play on a court at once');
+                                if (sourceCourt !== null) {
+                                    courts[sourceCourt].push(draggedPlayer);
+                                }
+                            } else {
+                                courts[i].push(draggedPlayer);
+                            }
+                            dropped = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            draggedPlayer = null;
+            sourceCourt = null;
+            isDraggingTouch = false;
+            document.getElementById('waitingSection').classList.remove('drag-over');
+            document.querySelectorAll('.court-players').forEach(court => {
+                court.classList.remove('drag-over');
+            });
+            
+            saveState();
+            render();
+        }
+
+        // ============================================
+        // RENDERING FUNCTIONS
+        // ============================================
+
+        function render() {
+            renderWaitingQueue();
+            renderCourts();
+        }
+
+        function renderWaitingQueue() {
+            const waitingQueueDiv = document.getElementById('waitingQueue');
+            const waitingCount = document.getElementById('waitingCount');
+            
+            const waitingPlayers = players.filter(player => !isPlayerPlaying(player));
+            
+            waitingCount.textContent = waitingPlayers.length;
+            
+            waitingQueueDiv.innerHTML = '';
+            
+            if (waitingPlayers.length === 0) {
+                waitingQueueDiv.innerHTML = '<div class="empty-message">No players waiting</div>';
+                return;
+            }
+            
+            waitingPlayers.forEach(player => {
+                const playerCard = createPlayerCard(player, null);
+                waitingQueueDiv.appendChild(playerCard);
+            });
+
+            const waitingSection = document.getElementById('waitingSection');
+            waitingSection.ondragover = handleDragOver;
+            waitingSection.ondragenter = (e) => handleDragEnter(e, 'waiting');
+            waitingSection.ondragleave = (e) => handleDragLeave(e, 'waiting');
+            waitingSection.ondrop = (e) => handleDrop(e, 'waiting');
+        }
+
+        function renderCourts() {
+            const courtsContainer = document.getElementById('courtsContainer');
+            courtsContainer.innerHTML = '';
+            
+            for (let i = 0; i < numberOfCourts; i++) {
+                const courtDiv = document.createElement('div');
+                courtDiv.className = 'court-section';
+                
+                const courtPlayers = courts[i];
+                const isActive = courtPlayers.length > 0;
+                
+                const waitingPlayers = players.filter(player => !isPlayerPlaying(player));
+                const canStartGame = courtPlayers.length === 0 && waitingPlayers.length >= 4;
+                
+                courtDiv.innerHTML = `
+                    <div class="court-header">
+                        <h3>Court ${i + 1}</h3>
+                        <span class="status-badge ${isActive ? 'status-active' : 'status-empty'}">
+                            ${isActive ? 'Active' : 'Empty'}
+                        </span>
+                    </div>
+                    <div class="court-controls">
+                        <button class="btn-secondary btn-small" id="start-${i}" onclick="startGame(${i})" ${!canStartGame ? 'disabled' : ''}>
+                            Start Game
+                        </button>
+                        <button class="btn-danger btn-small" id="end-${i}" onclick="endGame(${i})" ${courtPlayers.length === 0 ? 'disabled' : ''}>
+                            End Game
+                        </button>
+                    </div>
+                    <div class="court-players" id="court-${i}-players"></div>
+                `;
+                
+                courtsContainer.appendChild(courtDiv);
+                
+                const courtPlayersDiv = document.getElementById(`court-${i}-players`);
+                
+                if (courtPlayers.length === 0) {
+                    courtPlayersDiv.innerHTML = '<div class="empty-message">No players on court</div>';
+                } else {
+                    courtPlayers.forEach(player => {
+                        const playerCard = createPlayerCard(player, i);
+                        courtPlayersDiv.appendChild(playerCard);
+                    });
+                }
+                
+                courtPlayersDiv.ondragover = handleDragOver;
+                courtPlayersDiv.ondragenter = (e) => handleDragEnter(e, 'court', i);
+                courtPlayersDiv.ondragleave = (e) => handleDragLeave(e, 'court', i);
+                courtPlayersDiv.ondrop = (e) => handleDrop(e, 'court', i);
+            }
+        }
+
+        function createPlayerCard(player, courtIndex) {
+            const playerCard = document.createElement('div');
+            const isPlaying = courtIndex !== null;
+            playerCard.className = isPlaying ? 'player-card playing' : 'player-card';
+            playerCard.draggable = true;
+            
+            playerCard.ondragstart = (e) => handleDragStart(e, player, courtIndex);
+            playerCard.ondragend = handleDragEnd;
+            
+            playerCard.ontouchstart = (e) => handleTouchStart(e, player, courtIndex);
+            playerCard.ontouchmove = handleTouchMove;
+            playerCard.ontouchend = handleTouchEnd;
+            
+            playerCard.innerHTML = `
+                <span class="drag-handle">⋮⋮</span>
+                <div class="player-info">
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-stats">
+                        Games: ${player.gamesPlayed} | Last: ${formatLastPlayed(player.lastPlayedTimestamp)}
+                    </div>
+                </div>
+            `;
+            
+            return playerCard;
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        // Load saved state on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const hasData = loadState();
+            
+            if (!hasData) {
+                // First time user - initialize courts
+                initializeCourts();
+            }
+            
+            // Initial render
+            render();
+            
+            // Update "last saved" time every 30 seconds if there's saved data
+            if (hasData) {
+                setInterval(() => {
+                    const savedState = localStorage.getItem(STORAGE_KEY);
+                    if (savedState) {
+                        const state = JSON.parse(savedState);
+                        if (state.lastSaved) {
+                            updateLastSavedTime(state.lastSaved);
+                        }
+                    }
+                }, 30000);
+            }
+        });
+
+        // Allow pressing Enter to add player
+        document.getElementById('playerNameInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addPlayer();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('resetModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideResetModal();
+            }
+        });
+    </script>
+</body>
+</html>
