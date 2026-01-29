@@ -641,6 +641,12 @@
         let touchStartY = 0;
         let isDraggingTouch = false;
         let dragStartedFromHandle = false;
+        
+        // Auto-scroll variables
+        let autoScrollInterval = null;
+        let scrollSpeed = 0;
+        const SCROLL_ZONE = 80; // pixels from edge to trigger scroll
+        const MAX_SCROLL_SPEED = 15; // pixels per frame
 
         // LocalStorage key
         const STORAGE_KEY = 'badminq_data';
@@ -957,6 +963,55 @@
         }
 
         // ============================================
+        // AUTO-SCROLL FUNCTIONS
+        // ============================================
+
+        /**
+         * Calculate scroll speed based on touch position
+         */
+        function calculateScrollSpeed(touchY) {
+            const viewportHeight = window.innerHeight;
+            
+            // Top scroll zone
+            if (touchY < SCROLL_ZONE) {
+                const proximity = 1 - (touchY / SCROLL_ZONE);
+                return -proximity * MAX_SCROLL_SPEED;
+            }
+            
+            // Bottom scroll zone
+            if (touchY > viewportHeight - SCROLL_ZONE) {
+                const proximity = (touchY - (viewportHeight - SCROLL_ZONE)) / SCROLL_ZONE;
+                return proximity * MAX_SCROLL_SPEED;
+            }
+            
+            return 0;
+        }
+
+        /**
+         * Start auto-scrolling
+         */
+        function startAutoScroll() {
+            if (autoScrollInterval) return;
+            
+            autoScrollInterval = setInterval(() => {
+                if (scrollSpeed !== 0) {
+                    window.scrollBy(0, scrollSpeed);
+                }
+            }, 16); // ~60fps
+        }
+
+        /**
+         * Stop auto-scrolling
+         */
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+            scrollSpeed = 0;
+        }
+
+        // ============================================
         // DRAG AND DROP FUNCTIONS
         // ============================================
 
@@ -1088,7 +1143,15 @@
             const deltaY = Math.abs(touch.clientY - touchStartY);
             
             if (deltaX > 10 || deltaY > 10) {
-                isDraggingTouch = true;
+                if (!isDraggingTouch) {
+                    isDraggingTouch = true;
+                    startAutoScroll();
+                }
+            }
+            
+            // Calculate and update scroll speed based on touch position
+            if (isDraggingTouch) {
+                scrollSpeed = calculateScrollSpeed(touch.clientY);
             }
             
             const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -1116,6 +1179,9 @@
         }
 
         function handleTouchEnd(event) {
+            // Stop auto-scrolling
+            stopAutoScroll();
+            
             if (!draggedPlayer || !isDraggingTouch) {
                 if (event.currentTarget) {
                     event.currentTarget.classList.remove('dragging');
